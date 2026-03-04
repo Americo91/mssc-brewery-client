@@ -2,38 +2,28 @@ package astoppello.msscbreweryclient.web;
 
 import astoppello.msscbreweryclient.web.model.BeerDto;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.boot.restclient.RestTemplateBuilder;
 
 import java.util.UUID;
 
 
-@ConfigurationProperties(value = "sfg.brewery", ignoreUnknownFields = false)
 @Component
 public class BreweryClient {
 
     public final String BEER_PATH_V1 = "/api/v1/beer/";
-    private String apiHost;
     private final RestTemplate restTemplate;
+    private String apihost;
 
-    public BreweryClient(RestTemplateBuilder restTemplateBuilder) {
+    public BreweryClient(RestTemplateBuilder restTemplateBuilder, BreweryProperties properties) {
         this.restTemplate = restTemplateBuilder.build();
-    }
-
-    public String getApiHost() {
-        return apiHost;
-    }
-
-    private void setApiHost(String apiHost) {
-        this.apiHost = apiHost;
+        this.apihost = properties.apihost();
     }
 
     public BeerDto getBeerById(UUID uuid) {
-        return restTemplate.getForObject(apiHost + BEER_PATH_V1 + uuid.toString(), BeerDto.class);
+        return restTemplate.getForObject(apihost + BEER_PATH_V1 + uuid.toString(), BeerDto.class);
     }
-
-
 
 
 }
